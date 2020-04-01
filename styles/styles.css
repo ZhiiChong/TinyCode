@@ -1,0 +1,8 @@
+#qr-canvas > canvas,
+#bar-canvas {
+  display: block; /* Required to allow centering of the canvas */
+  margin: 0 auto;
+}
+#qr-canvas > img {
+  margin: 0 auto;
+}

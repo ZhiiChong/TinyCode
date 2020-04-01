@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Zhiichong">
+    <!-- link rel="stylesheet" src="styles/style.css" -->
+    <!-- link -->
+    <link href="https://cdn.staticfile.org/normalize/8.0.1/normalize.min.css" rel="stylesheet">
+    <!-- bootstrap.min.css -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jsbarcode -->
+    <script src="https://cdn.staticfile.org/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
+    <!-- qrcodejs -->
+    <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+    <!-- jquery -->
+    <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+    <!-- bootstrap.bundle.min.js -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <!-- bootstrap.min.js -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- 解决居中等特殊问题的 CSS -->
+    <link href="styles/styles.css" rel="stylesheet">
+    <title>TinyCode - BarCode/QRCode Generator</title>
+  </head>
+
+  <body>
+    <header class="container-fluid">
+      <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">Logo</a>
+        <!-- input type -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">文本</a>
+            </li>
+            <li class="nav-item"></li>
+              <a class="nav-link" href="#">文件</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">网址</a>
+            </li>    
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main class="container text-center">
+      <!-- nav class="input-type"-->
+
+      <div class="input-area container">
+        <br/>
+        <textarea id="input" name="text" class="form-control" placeholder="&nbsp;type something..."></textarea>
+        <div class="submit-button" style="margin:30px">
+          <input class="btn btn-light" type="submit" value="生成条形码/二维码" onclick="generate()">
+        </div>
+      </div>
+      <div class="output-area container">
+        <div class="row">
+          <div class="col-sm-4">
+            <div id="qr-canvas"></div>
+          </div>
+          <div class="col-sm-8">
+            <canvas id="bar-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <script src="scripts/index.js"></script>
+      <!-- div class="history-list"-->
+    </main>
+    <footer>
+
+    </footer>
+  </body>
+</html>
