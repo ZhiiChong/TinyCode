@@ -3,8 +3,7 @@
 
 ## Dependencies
 1. JsBarcode by Johan Lindell
-2. qrCode.js by David Shim
+2. Node-QRCode by Ryan Day
 3. Bootstrap
 4. jQuery
 
-Libs above are supported by CDN reference.
