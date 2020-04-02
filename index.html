@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+  <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,8 +11,6 @@
     <link href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- jsbarcode -->
     <script src="https://cdn.staticfile.org/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
-    <!-- qrcodejs -->
-    <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
     <!-- jquery -->
     <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
     <!-- bootstrap.bundle.min.js -->
@@ -25,50 +23,104 @@
   </head>
 
   <body>
+    <!-- header and nav - 页眉和导航（输入类型） -->
     <header class="container-fluid">
-      <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-        <!-- Brand -->
-        <a class="navbar-brand" href="#">Logo</a>
-        <!-- input type -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">文本</a>
-            </li>
-            <li class="nav-item"></li>
-              <a class="nav-link" href="#">文件</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">网址</a>
-            </li>    
-          </ul>
-        </div>
-      </nav>
+      
     </header>
-    <main class="container text-center">
-      <!-- nav class="input-type"-->
-
-      <div class="input-area container">
-        <br/>
-        <textarea id="input" name="text" class="form-control" placeholder="&nbsp;type something..."></textarea>
-        <div class="submit-button" style="margin:30px">
-          <input class="btn btn-light" type="submit" value="生成条形码/二维码" onclick="generate()">
+    <!-- Nav - 导航栏 -->
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <!-- Brand -->
+      <span class="navbar-brand">Logo</span>
+      <!-- 移动设备自适应 -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Navbar links - 导航链接（输入类型） -->
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">文本</a>
+          </li>
+          <!--li class="nav-item"></li>
+            <a class="nav-link" href="#">文件</a>
+          </li-->
+          <li class="nav-item">
+            <a class="nav-link" href="#">网址</a>
+          </li>    
+        </ul>
+      </div>
+    </nav>
+    <main class="container-fluid text-center bg-light row" style="padding:15px;">
+      <!-- io area - 文本输入与码图输出区域 -->
+      <div class="col-sm-9">
+        <div class="input-area">
+          <textarea id="input" name="text" class="form-control" placeholder="&nbsp;type something..."></textarea>
+          <input class="btn btn-dark" type="submit" value="全部生成" onclick="bothGen()">
+        </div>
+        <div class="output-area">
+          <div class="row">
+            <div class="col-12">
+              <canvas id="qr-canvas"></div>
+            </div>
+            <div class="col-12">
+              <canvas id="bar-canvas"></canvas>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="output-area container">
-        <div class="row">
-          <div class="col-sm-4">
-            <div id="qr-canvas"></div>
+      <!-- options - 二维码与条码参数设置 -->
+      <div class="col-sm-3">
+        <!-- qrCode options - 二维码参数 -->
+        <div class="qr-option">
+          <div class="small">
+            <label for="crt-level" >容错级别 </label>
+            <select id="crt-level" name="correction-level">
+              <option value="L">Low 低</option>
+              <option value="M" selected>Medium 中</option>
+              <option value="Q">Quartile 准高</option>
+              <option value="H">High 高</option>
+            </select>
           </div>
-          <div class="col-sm-8">
-            <canvas id="bar-canvas"></canvas>
+          <div class="small">
+            <label for="qr-dark" class="lb-middle">前景 </label>
+            <input id="qr-dark" type="color" value="#000000" name="bg-color" onchange="qrDkColor()">
+          </div>
+          <div class="small">
+            <label for="qr-light" class="lb-middle">背景 </label>
+            <input id="qr-light" type="color" value="#ffffff" name="fg-color" onchange="qrLtColor()">
+          <div class="small">
+            <input id="qr-light-none" type="checkbox" name="qr-light-none" value="qr-light-none" onclick="qrLtCheck()">
+            <label for="qr-light-none">透明背景</label>
+          </div>
+          <div class="small">
+            <label for="qr-width" class="lb-middle">大小 </label>
+            <input id="qr-width" type="range" name="qr-width" value="128" min="50" max="300" step="1" onchange="qrWidth()">
+          </div>
+          <div class="small">
+            <label for="qr-margin" class="lb-middle">留白 </label>
+            <input id="qr-margin" type="number" name="qr-margin" value="4" min="0" max="10" step="1" oninput="value=parseInt(value);if(value>10)value=10;else if(value<0)value=0;" onchange="qrMargin()">
+          </div>
+          <div class="small">
+            <label for="qr-scale" class="lb-middle">方块像素 </label>
+            <input id="qr-scale" type="number" name="qr-scale" value="4" min="1" max="10" step="1" oninput="value=parseInt(value);if(value>10)value=10;else if(value<=0)value=1;" onchange="qrScale()">
+          </div>
+          <div class="btn-group">
+            <input class="btn " type="button" value="生成" onclick="qrGen()">
+            <input class="btn " type="button" value="保存" onclick="">
+            <input class="btn " type="button" value="清空" onclick="qrCanvasClear()">
+          </div>
+        </div>
+        <!-- barCode options - 条形码参数 -->
+        <div class="bar-option">
+          <div class="btn-group">
+            <input class="btn " type="button" value="生成" onclick="barGen()">
+            <input class="btn " type="button" value="保存" onclick="">
+            <input class="btn " type="button" value="清空" onclick="barCanvasClear()">
           </div>
         </div>
       </div>
+      <!-- 引入 qrcode 库-->
+      <script src="qrcode/build/qrcode.min.js"></script>
       <script src="scripts/index.js"></script>
       <!-- div class="history-list"-->
     </main>
