@@ -1,8 +1,18 @@
-#qr-canvas > canvas,
+/*#qr-canvas > canvas,
 #bar-canvas {
   display: block; /* Required to allow centering of the canvas */
-  margin: 0 auto;
+  /*margin: 0 auto;
 }
 #qr-canvas > img {
   margin: 0 auto;
+}*/
+
+@media screen and (min-width: 768px) {
+  .navbar-brand {
+    display: none;
+  }
+}
+
+.lb-middle {
+  vertical-align: middle;
 }
