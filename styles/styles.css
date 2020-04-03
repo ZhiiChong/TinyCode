@@ -16,3 +16,13 @@
 .lb-middle {
   vertical-align: middle;
 }
+
+.option-range {
+  width: 80px;
+}
+
+.option-value {
+  display: inline-block;
+  width: 5px;
+  vertical-align: top;
+}
