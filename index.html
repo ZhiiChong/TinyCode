@@ -18,7 +18,7 @@
     <!-- bootstrap.min.js -->
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <!-- 解决居中等特殊问题的 CSS -->
-    <link href="styles/styles.css" rel="stylesheet">
+    <link href="styles/styles.css" rel="stylesheet" />
     <title>TinyCode - BarCode/QRCode Generator</title>
   </head>
 
@@ -54,17 +54,15 @@
       <!-- io area - 文本输入与码图输出区域 -->
       <div class="col-sm-9">
         <div class="input-area">
-          <textarea id="input" name="text" class="form-control" placeholder="&nbsp;type something..."></textarea>
+          <textarea id="input" name="text" class="form-control" placeholder="&nbsp;type something..." oninput="textInput()"></textarea>
           <input class="btn btn-dark" type="submit" value="全部生成" onclick="bothGen()">
         </div>
         <div class="output-area">
-          <div class="row">
-            <div class="col-12">
-              <canvas id="qr-canvas"></div>
-            </div>
-            <div class="col-12">
-              <canvas id="bar-canvas"></canvas>
-            </div>
+          <div class="qrcode-container">
+            <canvas id="qr-canvas"></div>
+          </div>
+          <div class="barcode-container">
+            <canvas id="bar-canvas"></canvas>
           </div>
         </div>
       </div>
@@ -74,7 +72,7 @@
         <div class="qr-option">
           <div class="small">
             <label for="crt-level" >容错级别 </label>
-            <select id="crt-level" name="correction-level">
+            <select id="crt-level" name="correction-level" onchange="qrCrtLevel()">
               <option value="L">Low 低</option>
               <option value="M" selected>Medium 中</option>
               <option value="Q">Quartile 准高</option>
@@ -88,33 +86,124 @@
           <div class="small">
             <label for="qr-light" class="lb-middle">背景 </label>
             <input id="qr-light" type="color" value="#ffffff" name="fg-color" onchange="qrLtColor()">
+          </div>
           <div class="small">
             <input id="qr-light-none" type="checkbox" name="qr-light-none" value="qr-light-none" onclick="qrLtCheck()">
             <label for="qr-light-none">透明背景</label>
           </div>
-          <div class="small">
+          <div class="small" >
             <label for="qr-width" class="lb-middle">大小 </label>
-            <input id="qr-width" type="range" name="qr-width" value="128" min="50" max="300" step="1" onchange="qrWidth()">
+            <input id="qr-width" class="option-range" type="range" name="qr-width" value="128" min="50" max="300" step="1" oninput="qrWidth()">
+            <div id="qr-width-value" class="option-value">128</div>
           </div>
           <div class="small">
-            <label for="qr-margin" class="lb-middle">留白 </label>
-            <input id="qr-margin" type="number" name="qr-margin" value="4" min="0" max="10" step="1" oninput="value=parseInt(value);if(value>10)value=10;else if(value<0)value=0;" onchange="qrMargin()">
+            <label for="qr-margin">留白 </label>
+            <input id="qr-margin" class="option-range" type="range" name="qr-margin" value="4" min="0" max="10" step="1" oninput="qrMargin()">
+            <div id="qr-margin-value" class="option-value">4</div>
           </div>
-          <div class="small">
+          <!--div class="small"  scale 属性会被 width 属性覆盖，只在 width 缺省的时候起作用 >
             <label for="qr-scale" class="lb-middle">方块像素 </label>
             <input id="qr-scale" type="number" name="qr-scale" value="4" min="1" max="10" step="1" oninput="value=parseInt(value);if(value>10)value=10;else if(value<=0)value=1;" onchange="qrScale()">
+          </div-->
+          <div class="small">
+            <label for="qr-version">版本 </label>
+            <input id="qr-version" class="option-range" type="range" name="qr-version" value="0" min="0" max="40" step="1" oninput="qrVersion()">
+            <div id="qr-version-value" class="option-value">auto</div>
+            <div>
+              <input id="version-auto" type="checkbox" name="version-auto" value="version-auto" onclick="qrVersion()">
+              <label for="version-auto">自动选择版本</label>
+            </div>
+          </div>
+          <div class="small">
+            <label for="qr-mask">掩码 </label>
+            <input id="qr-mask" class="option-range" type="range" name="qr-mask" value="-1" min="-1" max="7" step="1" oninput="qrMask()">
+            <div id="qr-mask-value" class="option-value">auto</div>
+            <div>
+              <input id="mask-auto" type="checkbox" name="mask-auto" value="mask-auto" onclick="qrMask()">
+              <label for="mask-auto">自动选择掩码</label>
+            </div>
           </div>
           <div class="btn-group">
             <input class="btn " type="button" value="生成" onclick="qrGen()">
-            <input class="btn " type="button" value="保存" onclick="">
+            <input class="btn " type="button" value="保存" onclick="Download('qr-canvas')">
             <input class="btn " type="button" value="清空" onclick="qrCanvasClear()">
           </div>
         </div>
         <!-- barCode options - 条形码参数 -->
         <div class="bar-option">
+          <div class="small">
+            <label for="bar-width" class="lb-middle">粗度 </label>
+            <input id="bar-width" class="option-range" type="range" name="bar-width" value="2" min="1" max="4" step="1" oninput="barWidth()">
+            <div id="bar-width-value" class="option-value">2</div>
+          </div>
+          <div class="small">
+            <label for="bar-height" class="lb-middle">高度 </label>
+            <input id="bar-height" class="option-range" type="range" name="bar-height" value="100" min="50" max="200" oninput="barHeight()">
+            <div id="bar-height-value" class="option-value">100</div>
+          </div>
+          <div class="small">
+            <label for="bar-margin" class="lb-middle">留白 </label>
+            <input id="bar-margin" class="option-range" type="range" name="bar-margin" value="10" min="0" max="25" oninput="barMargin()">
+            <div id="bar-margin-value" class="option-value">10</div>
+          </div>
+          <div class="small">
+            <label for="bar-line" class="lb-middle">线条 </label>
+            <input id="bar-line" type="color" value="#000000" name="bar-line" onchange="barLineColor()">
+          </div>
+          <div class="small">
+            <label for="bar-bg" class="lb-middle">背景 </label>
+            <input id="bar-bg" type="color" value="#ffffff" name="bar-line" onchange="barBgColor()">
+          </div>
+          <div class="small">
+            <input id="bar-text-display" type="checkbox" name="bar-text-display" value="bar-text-display" onclick="barTextCheck()">
+            <label for="bar-text-display">隐藏条码文本</label>
+          </div>
+          <div class="small">
+            <span>字体样式 </span>
+            <input id="font-bold" type="checkbox" name="font-bold" value="font-bold" onclick="barFontStyle()">
+            <label for="font-bold"><b>加粗</b></label>
+            <input id="font-italic" type="checkbox" name="font-italic" value="font-italic" onclick="barFontStyle()">
+            <label for="font-italic"><i>斜体</i></label>
+          </div>
+          <div class="small">
+            <label for="bar-font" >字体 </label>
+            <select id="bar-font" name="bar-font" onchange="barFont()">
+              <option value="monospace" selected>Monospace</option>
+              <option value="Sans-serif">Sans-serif</option>
+              <option value="Serif">Serif</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Cursive">Cursive</option>
+            </select>
+          </div>
+          <div class="small">
+            <label >文本对齐</label>
+            <input id="align-left" type="radio" name="text-align" value="left" onclick="barTextAlign('left')">
+            <label for="align-left">左</label>
+            <input id="align-middle" type="radio" name="text-align" value="middle" checked onclick="barTextAlign('middle')">
+            <label for="align-middle">中</label>
+            <input id="align-right" type="radio" name="text-align" value="right" onclick="barTextAlign('right')">
+            <label for="align-right">右</label>
+          </div>
+          <div class="small">
+            <label >文本位置</label>
+            <input id="position-top" type="radio" name="text-position" value="top" onclick="barTextPosition('top')">
+            <label for="position-top">顶部</label>
+            <input id="position-bottom" type="radio" name="text-position" value="bottom" checked onclick="barTextPosition('bottom')">
+            <label for="position-bottom">底部</label>
+          </div>
+          <div class="small">
+            <label for="bar-font-size">字体大小 </label>
+            <input id="bar-font-size" class="option-range" type="range" name="bar-font-size" value="20" min="8" max="36" step="1" oninput="barFontSize()">
+            <div id="bar-font-size-value" class="option-value">20</div>
+          </div>
+          <div class="small">
+            <label for="bar-text-margin">文本留白 </label>
+            <input id="bar-text-margin" class="option-range" type="range" name="bar-text-margin" value="2" min="-15" max="40" step="1" oninput="barTextMargin()">
+            <div id="bar-text-margin-value" class="option-value">2</div>
+          </div>
           <div class="btn-group">
             <input class="btn " type="button" value="生成" onclick="barGen()">
-            <input class="btn " type="button" value="保存" onclick="">
+            <input class="btn " type="button" value="保存" onclick="Download('bar-canvas')">
             <input class="btn " type="button" value="清空" onclick="barCanvasClear()">
           </div>
         </div>
