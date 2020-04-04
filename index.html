@@ -3,218 +3,397 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Zhiichong">
-    <!-- link rel="stylesheet" src="styles/style.css" -->
-    <!-- link -->
+    <meta name="author" content="zhiichong">
+    <!-- normalization.min.css - 格式化样式 -->
     <link href="https://cdn.staticfile.org/normalize/8.0.1/normalize.min.css" rel="stylesheet">
-    <!-- bootstrap.min.css -->
+    <!-- bootstrap.min.css - 样式框架 -->
     <link href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <!-- jsbarcode -->
+    <!-- jsbarcode - 条形码生成库 -->
     <script src="https://cdn.staticfile.org/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
-    <!-- jquery -->
+    <!-- jquery - js库，用于支持 bootstrap 及代码优化 -->
     <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
     <!-- bootstrap.bundle.min.js -->
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <!-- bootstrap.min.js -->
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <!-- 解决居中等特殊问题的 CSS -->
+    <!-- 自定义样式 CSS -->
     <link href="styles/styles.css" rel="stylesheet" />
     <title>TinyCode - BarCode/QRCode Generator</title>
   </head>
 
   <body>
-    <!-- header and nav - 页眉和导航（输入类型） -->
-    <header class="container-fluid">
-      
-    </header>
-    <!-- Nav - 导航栏 -->
-    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-      <!-- Brand -->
-      <span class="navbar-brand">Logo</span>
-      <!-- 移动设备自适应 -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <!-- Navbar links - 导航链接（输入类型） -->
-      <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">文本</a>
-          </li>
-          <!--li class="nav-item"></li>
-            <a class="nav-link" href="#">文件</a>
-          </li-->
-          <li class="nav-item">
-            <a class="nav-link" href="#">网址</a>
-          </li>    
-        </ul>
+    <div id="main" class="container rounded" >
+      <div class="container title-container">
+        <h1>TinyCode 微码</h1>
+        <p>
+          <small>
+            A BarCode/QRCode generator. 条形码/二维码生成器。<br/>
+            Powered by 技术支持 ——
+            <a class="text-dark" href="https://github.com/lindell/JsBarcode" title="jsbarcode">JsBarcode</a> &
+            <a class="text-dark" href="https://github.com/soldair/node-qrcode" title="node-qrcode">Node-QRCode</a><br/>
+            Contact me at 邮箱
+            <a class="text-dark" href="mailto:zhiichong@foxmail.com" title="e-mail">zhiichong@foxmail.com</a> or my
+            <a class="text-dark" href="https://github.com/ZhiiChong">github</a> :)
+          </small>
+        </p>
       </div>
-    </nav>
-    <main class="container-fluid text-center bg-light row" style="padding:15px;">
-      <!-- io area - 文本输入与码图输出区域 -->
-      <div class="col-sm-9">
-        <div class="input-area">
-          <textarea id="input" name="text" class="form-control" placeholder="&nbsp;type something..." oninput="textInput()"></textarea>
-          <input class="btn btn-dark" type="submit" value="全部生成" onclick="bothGen()">
-        </div>
-        <div class="output-area">
-          <div class="qrcode-container">
-            <canvas id="qr-canvas"></div>
+      <div id="main-box" class="container row">
+        <!-- io area - 文本输入与码图输出区域 -->
+        <div id="io-area" class="col-12 col-lg-8 container">
+          <div class="input-area container">
+            <!-- 文本输入框 -->
+            <div id="input-container">
+              <textarea id="input" name="text" class="form-control" placeholder="&nbsp;type something..." oninput="textInput()"></textarea>
+            </div>
+            <!-- 生成按钮与实时渲染选项 -->
+            <div id="renderer-buttons" class="container">
+              <div class="btn-group input-buttons small">
+                <button id="real-time" class="btn btn-secondary" type="button" value="false" onclick="setRealTime()">实时渲染</button>
+                <button class="btn btn-secondary" type="button" value="全部生成" onclick="bothGen()">全部生成</button>
+              </div>
+              <div class="btn-group-vertical input-buttons-vertical">
+                <button id="real-time-vertical" class="btn btn-secondary" type="button" value="false" onclick="setRealTime()">实时渲染</button>
+                <button class="btn btn-secondary" type="button" value="全部生成" onclick="bothGen()">全部生成</button>
+              </div>
+            </div>
           </div>
-          <div class="barcode-container">
-            <canvas id="bar-canvas"></canvas>
+          <!-- 画布 -->
+          <div class="output-container container">
+            <div id="qr-container" class="code-container container">
+              <canvas id="qr-canvas"></canvas>
+              <div id="qr-error" style="display: none"></div>
+            </div>
+            <div id="bar-container" class="code-container container">
+              <canvas id="bar-canvas"></canvas>
+              <div id="bar-error" style="display: none"></div>
+            </div>
+          </div>
+          <!-- 显示二维码/条形码及选项按钮组 -->
+          <div id="show-buttons" class="container">
+            <div class="btn-group input-buttons small">
+              <button id="display-qr" class="btn btn-dark" type="button" value="true" onclick="display('qr')">显示二维码</button>
+              <button id="display-bar" class="btn btn-dark" type="button" value="true" onclick="display('bar')">显示条形码</button>
+            </div>
+            <div class="btn-group-vertical input-buttons-vertical">
+              <button id="display-qr-vertical" class="btn btn-dark" type="button" value="true" onclick="display('qr')">显示二维码</button>
+              <button id="display-bar-vertical" class="btn btn-dark" type="button" value="true" onclick="display('bar')">显示条形码</button>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- options - 二维码与条码参数设置 -->
-      <div class="col-sm-3">
+        <!-- options - 二维码与条码参数设置 -->
         <!-- qrCode options - 二维码参数 -->
-        <div class="qr-option">
-          <div class="small">
-            <label for="crt-level" >容错级别 </label>
-            <select id="crt-level" name="correction-level" onchange="qrCrtLevel()">
-              <option value="L">Low 低</option>
-              <option value="M" selected>Medium 中</option>
-              <option value="Q">Quartile 准高</option>
-              <option value="H">High 高</option>
-            </select>
+        <div id="qr-options" class="col-12 col-md-6 col-lg-2 rounded">
+          <!-- 容错级别 -->
+          <div class="small row">
+            <div class="col-3 col-lg-12  description-text">
+              <p>容错</p>
+            </div>
+            <div class="col-7 col-lg-10  center-text">
+              <select id="crt-level" name="correction-level" onchange="qrCrtLevel()">
+                <option value="L">Low 低</option>
+                <option value="M" selected>Medium 中</option>
+                <option value="Q">Quartile 准高</option>
+                <option value="H">High 高</option>
+              </select>
+            </div>
+            <div class="col-2"></div>
           </div>
-          <div class="small">
-            <label for="qr-dark" class="lb-middle">前景 </label>
-            <input id="qr-dark" type="color" value="#000000" name="bg-color" onchange="qrDkColor()">
+          <!-- 前景颜色 -->
+          <div class="small row">
+            <div class="col-3 col-lg-12  description-text">
+              <p>前景</p>
+            </div>
+            <div class="col-7 col-lg-10  center-text">
+              <input id="qr-dark" type="color" value="#000000" name="bg-color" onchange="qrDkColor()">
+            </div>
+            <div class="col-2"></div>
           </div>
-          <div class="small">
-            <label for="qr-light" class="lb-middle">背景 </label>
-            <input id="qr-light" type="color" value="#ffffff" name="fg-color" onchange="qrLtColor()">
+          <!-- 背景透明 -->
+          <div class="small row">
+            <div class="col-7 offset-3 col-lg-10 offset-lg-0 center-text setting-buttons">
+              <button id="qr-light-none" class="btn btn-secondary" type="button" name="qr-light-none" value="false" onclick="qrLtCheck()">透明背景</button>
+            </div>
+            <div class="col-lg-2"></div>
           </div>
-          <div class="small">
-            <input id="qr-light-none" type="checkbox" name="qr-light-none" value="qr-light-none" onclick="qrLtCheck()">
-            <label for="qr-light-none">透明背景</label>
-          </div>
-          <div class="small" >
-            <label for="qr-width" class="lb-middle">大小 </label>
-            <input id="qr-width" class="option-range" type="range" name="qr-width" value="128" min="50" max="300" step="1" oninput="qrWidth()">
-            <div id="qr-width-value" class="option-value">128</div>
-          </div>
-          <div class="small">
-            <label for="qr-margin">留白 </label>
-            <input id="qr-margin" class="option-range" type="range" name="qr-margin" value="4" min="0" max="10" step="1" oninput="qrMargin()">
-            <div id="qr-margin-value" class="option-value">4</div>
-          </div>
-          <!--div class="small"  scale 属性会被 width 属性覆盖，只在 width 缺省的时候起作用 >
-            <label for="qr-scale" class="lb-middle">方块像素 </label>
-            <input id="qr-scale" type="number" name="qr-scale" value="4" min="1" max="10" step="1" oninput="value=parseInt(value);if(value>10)value=10;else if(value<=0)value=1;" onchange="qrScale()">
-          </div-->
-          <div class="small">
-            <label for="qr-version">版本 </label>
-            <input id="qr-version" class="option-range" type="range" name="qr-version" value="0" min="0" max="40" step="1" oninput="qrVersion()">
-            <div id="qr-version-value" class="option-value">auto</div>
-            <div>
-              <input id="version-auto" type="checkbox" name="version-auto" value="version-auto" onclick="qrVersion()">
-              <label for="version-auto">自动选择版本</label>
+          <!-- 背景颜色 -->
+          <div class="small row" id="qr-light-container">
+            <div class="col-3 col-lg-12  description-text">
+              <p>背景</p>
+            </div>
+            <div class="col-7 col-lg-10  center-text">
+              <input id="qr-light" type="color" value="#ffffff" name="fg-color" onchange="qrLtColor()">            
+            </div>
+            <div class="col-2"></div>
+          </div>      
+          <!-- 二维码大小（包含留白） -->
+          <div class="small row" >
+            <div class="col-3 col-lg-12  description-text">
+              <p>大小</p>
+            </div>
+            <div class="col-7 col-lg-10  center-text">
+              <input id="qr-width" class="option-range" type="range" name="qr-width" value="128" min="50" max="300" step="1" oninput="qrWidth()">
+            </div>
+            <div class="col-2 col-lg-2 value-text">
+              <p>
+                <span id="qr-width-value">128</span>
+              </p>
             </div>
           </div>
-          <div class="small">
-            <label for="qr-mask">掩码 </label>
-            <input id="qr-mask" class="option-range" type="range" name="qr-mask" value="-1" min="-1" max="7" step="1" oninput="qrMask()">
-            <div id="qr-mask-value" class="option-value">auto</div>
-            <div>
-              <input id="mask-auto" type="checkbox" name="mask-auto" value="mask-auto" onclick="qrMask()">
-              <label for="mask-auto">自动选择掩码</label>
+          <!-- 留白大小 -->
+          <div class="small row">
+            <div class="col-3 col-lg-12 description-text">
+              <p>留白</p>
+            </div>
+            <div class="col-7 col-lg-10  center-text">
+              <input id="qr-margin" class="option-range" type="range" name="qr-margin" value="4" min="0" max="10" step="1" oninput="qrMargin()">
+            </div>
+            
+            <div class="col-2 col-lg-2 value-text">
+              <p>
+                <span id="qr-margin-value">4</span>
+              </p>
             </div>
           </div>
-          <div class="btn-group">
-            <input class="btn " type="button" value="生成" onclick="qrGen()">
-            <input class="btn " type="button" value="保存" onclick="Download('qr-canvas')">
-            <input class="btn " type="button" value="清空" onclick="qrCanvasClear()">
+
+          <!-- 方块大小 -->
+          <!-- scale 属性会被 width 属性覆盖，只在 width 缺省的时候起作用 -->
+
+          <!-- 自动选择版本或掩码 -->
+          <div class="small row">
+            <div class="col-3 col-lg-12 description-text">
+              <p>自动</p>
+            </div>
+            <div class="col-7 col-lg-10  center-text">
+              <div class="btn-group setting-buttons">
+                <button id="version-auto" class="btn btn-secondary" type="button" name="version-auto" value="false" onclick="qrVersionAuto()">版本</button>
+                <button id="mask-auto" class="btn btn-secondary" type="button" name="mask-auto" value="false" onclick="qrMaskAuto()">掩码</button>
+              </div>
+            </div>
+            <div class="col-2"></div>
+          </div>
+          <!-- 版本号 -->
+          <div class="small row" id="qr-version-container">
+            <div class="col-3 col-lg-12 description-text">
+            <p>版本</p>
+            </div>
+            <div class="col-7 col-lg-10 center-text">
+              <input id="qr-version" class="option-range" type="range" name="qr-version" value="1" min="1" max="40" step="1" oninput="qrVersion()">
+            </div>
+            <div class="col-2 col-lg-2 value-text">
+              <p>
+                <span id="qr-version-value">auto</span>
+              </p>
+            </div>
+          </div>
+          <!-- 掩码样式 -->
+          <div class="small row" id="qr-mask-container">
+            <div class="col-3 col-lg-12 description-text">
+              <p>掩码</p>
+            </div>
+            <div class="col-7 col-lg-10 center-text">
+              <input id="qr-mask" class="option-range" type="range" name="qr-mask" value="0" min="0" max="7" step="1" oninput="qrMask()">
+            </div>
+            <div class="col-2 col-lg-2 value-text">
+              <p>
+                <span id="qr-mask-value">auto</span>
+              </p>
+            </div>
+          </div>
+          <!-- 功能按钮组 -->
+          <div class="small row">
+            <div class="col-12 center-text">
+              <div class="btn-group function-buttons">
+                <input class="btn btn-secondary" type="button" value="生成" onclick="qrGen()">
+                <input class="btn btn-secondary" type="button" value="保存" onclick="Download('qr-canvas')">
+                <input class="btn btn-secondary" type="button" value="清空" onclick="canvasClear('qr')">
+              </div>
+              <div class="btn-group-vertical function-buttons-vertical">
+                <input class="btn btn-secondary" type="button" value="生成" onclick="qrGen()">
+                <input class="btn btn-secondary" type="button" value="保存" onclick="Download('qr-canvas')">
+                <input class="btn btn-secondary" type="button" value="清空" onclick="canvasClear('qr')">
+              </div>
+            </div>
           </div>
         </div>
         <!-- barCode options - 条形码参数 -->
-        <div class="bar-option">
-          <div class="small">
-            <label for="bar-width" class="lb-middle">粗度 </label>
-            <input id="bar-width" class="option-range" type="range" name="bar-width" value="2" min="1" max="4" step="1" oninput="barWidth()">
-            <div id="bar-width-value" class="option-value">2</div>
+        <div id="bar-options" class="col-12 col-md-6 col-lg-2 rounded">
+            <!-- 粗度大小 -->
+            <div class="small row">
+              <div class="col-3 col-lg-12 description-text">
+                <p>粗度</p>
+              </div>
+              <div class="col-7 col-lg-10 center-text">
+              <input id="bar-width" class="option-range" type="range" name="bar-width" value="2" min="1" max="4" step="1" oninput="barWidth()">
+              </div>
+              <div class="col-2 col-lg-2 value-text">
+                <p>
+                  <span id="bar-width-value">2</span>
+                </p>
+              </div>
+            </div>
+            <!-- 高度大小 -->
+            <div class="small row">
+              <div class="col-3 col-lg-12 description-text">
+                <p>高度</p>
+              </div>
+              <div class="col-7 col-lg-10 center-text">
+                <input id="bar-height" class="option-range" type="range" name="bar-height" value="100" min="50" max="200" oninput="barHeight()">
+              </div>
+              <div class="col-2 col-lg-2 value-text">
+                <p>
+                  <span id="bar-height-value">100</span>
+                </p>
+              </div>
+            </div>
+            <!-- 留白大小 -->
+            <div class="small row">
+              <div class="col-3 col-lg-12 description-text">
+                <p>留白</p>
+              </div>
+              <div class="col-7 col-lg-10 center-text">
+                <input id="bar-margin" class="option-range" type="range" name="bar-margin" value="10" min="0" max="25" oninput="barMargin()">
+              </div>
+              <div class="col-2 col-lg-2 value-text">
+                <p>
+                  <span id="bar-margin-value">10</span>
+                </p>
+              </div>
+            </div>
+            <!-- 线条颜色 -->
+            <div class="small row">
+              <div class="col-3 col-lg-12 description-text">
+                <p>线条</p>
+              </div>
+              <div class="col-7 col-lg-10 center-text">
+                <input id="bar-line" type="color" value="#000000" name="bar-line" onchange="barLineColor()">
+              </div>
+              <div class="col-2"></div>
+            </div>
+            <!-- 背景颜色 -->
+            <div class="small row">
+              <div class="col-3 col-lg-12 description-text">
+                <p>背景</p>
+              </div>
+              <div class="col-7 col-lg-10 center-text">
+                <input id="bar-bg" type="color" value="#ffffff" name="bar-line" onchange="barBgColor()">              
+              </div>
+              <div class="col-2"></div>
+            </div>
+            <!-- 隐藏文本 -->
+            <div class="small row ">
+              <div class="col-7 offset-3 col-lg-10 offset-lg-0 center-text setting-buttons">
+                <button id="bar-text-display" class="btn btn-dark" type="button" name="bar-text-display" value="true" onclick="barTextCheck()">显示文本</button>
+              </div>
+              <div class="col-2"></div>
+            </div>
+            <!-- 文本样式（容器） -->
+            <div id="bar-text-container">
+              <!-- 字体样式 -->
+              <div class="small row ">
+                <div class="col-3 col-lg-12 description-text">
+                  <p>样式</p>
+                </div>
+                <div class="col-7 col-lg-10 center-text">
+                  <div class="btn-group setting-buttons">
+                    <button id="font-bold" class="btn btn-secondary" type="button" name="font-bold" value="false" onclick="barFontStyle('font-bold')"><b>加粗</b></button>
+                    <button id="font-italic" class="btn btn-secondary" type="button" name="font-italic" value="false" onclick="barFontStyle('font-italic')"><i>斜体</i></button>
+                  </div>
+                </div>
+                <div class="col-2"></div>
+              </div>
+              <!-- 字体种类 -->
+              <div class="small row">
+                <div class="col-3 col-lg-12 description-text">
+                  <p>字体</p>
+                </div>
+                <div class="col-7 col-lg-10 center-text">
+                  <select id="bar-font" name="bar-font" onchange="barFont()">
+                    <option value="monospace" selected>Monospace</option>
+                    <option value="Sans-serif">Sans-serif</option>
+                    <option value="Serif">Serif</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Cursive">Cursive</option>
+                  </select>
+                </div>
+                <div class="col-2"></div>
+              </div>
+              <!-- 文字对齐 -->
+              <div class="small row">
+                <div class="col-3 col-lg-12 description-text">
+                  <p>对齐</p>
+                </div>
+                <div class="col-7 col-lg-10 center-text">
+                  <div class="btn-group setting-buttons">
+                    <button id="align-left" class="btn btn-secondary" type="button" name="text-align" value="false" onclick="barTextAlign('left')">左</button>
+                    <button id="align-center" class="btn btn-dark" type="button" name="text-align" value="true" checked onclick="barTextAlign('center')">中</button>
+                    <button id="align-right" class="btn btn-secondary" type="button" name="text-align" value="false" onclick="barTextAlign('right')">右</button>
+                  </div>
+                </div>
+                <div class="col-2"></div>
+              </div>
+              <!-- 文本位置 -->
+              <div class="small row">
+                <div class="col-3 col-lg-12 description-text">
+                  <p>位置</p>
+                </div>
+                <div class="col-7 col-lg-10 center-text">
+                  <div class="btn-group setting-buttons">
+                    <button id="position-top" class="btn btn-secondary" type="button" name="text-position" value="false" onclick="barTextPosition('top')">顶部</button>
+                    <button id="position-bottom" class="btn btn-dark" type="button" name="text-position" value="true" checked onclick="barTextPosition('bottom')">底部</button>
+                  </div>
+                </div>
+                <div class="col-2"></div>
+              </div>
+              <!-- 字体大小 -->
+              <div class="small row">
+                <div class="col-3 col-lg-12 description-text">
+                  <p>大小</p>
+                </div>
+                <div class="col-7 col-lg-10 center-text">
+                  <input id="bar-font-size" class="option-range" type="range" name="bar-font-size" value="20" min="8" max="36" step="1" oninput="barFontSize()">
+                </div>
+                <div class="col-2 col-lg-2 value-text">
+                  <p>
+                    <span id="bar-font-size-value">20</span>
+                  </p>
+                </div>
+              </div>
+              <!-- 留白 -->
+              <div class="small row">
+                <div class="col-3 col-lg-12 description-text">
+                  <p>留白</p>
+                </div>
+                <div class="col-7 col-lg-10 center-text">
+                  <input id="bar-text-margin" class="option-range" type="range" name="bar-text-margin" value="2" min="-15" max="40" step="1" oninput="barTextMargin()">
+                </div>
+                <div class="col-2 col-lg-2 value-text">
+                  <p>
+                    <span id="bar-text-margin-value">2</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- 功能按钮组 -->
+            <div class="small row">
+              <div class="col-12 center-text">
+                <div class="btn-group function-buttons">
+                  <input class="btn btn-secondary" type="button" value="生成" onclick="barGen()">
+                  <input class="btn btn-secondary" type="button" value="保存" onclick="Download('bar-canvas')">
+                  <input class="btn btn-secondary" type="button" value="清空" onclick="canvasClear('bar')">
+                </div>
+                <div class="btn-group-vertical function-buttons-vertical">
+                  <input class="btn btn-secondary" type="button" value="生成" onclick="barGen()">
+                  <input class="btn btn-secondary" type="button" value="保存" onclick="Download('bar-canvas')">
+                  <input class="btn btn-secondary" type="button" value="清空" onclick="canvasClear('bar')">
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="small">
-            <label for="bar-height" class="lb-middle">高度 </label>
-            <input id="bar-height" class="option-range" type="range" name="bar-height" value="100" min="50" max="200" oninput="barHeight()">
-            <div id="bar-height-value" class="option-value">100</div>
-          </div>
-          <div class="small">
-            <label for="bar-margin" class="lb-middle">留白 </label>
-            <input id="bar-margin" class="option-range" type="range" name="bar-margin" value="10" min="0" max="25" oninput="barMargin()">
-            <div id="bar-margin-value" class="option-value">10</div>
-          </div>
-          <div class="small">
-            <label for="bar-line" class="lb-middle">线条 </label>
-            <input id="bar-line" type="color" value="#000000" name="bar-line" onchange="barLineColor()">
-          </div>
-          <div class="small">
-            <label for="bar-bg" class="lb-middle">背景 </label>
-            <input id="bar-bg" type="color" value="#ffffff" name="bar-line" onchange="barBgColor()">
-          </div>
-          <div class="small">
-            <input id="bar-text-display" type="checkbox" name="bar-text-display" value="bar-text-display" onclick="barTextCheck()">
-            <label for="bar-text-display">隐藏条码文本</label>
-          </div>
-          <div class="small">
-            <span>字体样式 </span>
-            <input id="font-bold" type="checkbox" name="font-bold" value="font-bold" onclick="barFontStyle()">
-            <label for="font-bold"><b>加粗</b></label>
-            <input id="font-italic" type="checkbox" name="font-italic" value="font-italic" onclick="barFontStyle()">
-            <label for="font-italic"><i>斜体</i></label>
-          </div>
-          <div class="small">
-            <label for="bar-font" >字体 </label>
-            <select id="bar-font" name="bar-font" onchange="barFont()">
-              <option value="monospace" selected>Monospace</option>
-              <option value="Sans-serif">Sans-serif</option>
-              <option value="Serif">Serif</option>
-              <option value="Fantasy">Fantasy</option>
-              <option value="Cursive">Cursive</option>
-            </select>
-          </div>
-          <div class="small">
-            <label >文本对齐</label>
-            <input id="align-left" type="radio" name="text-align" value="left" onclick="barTextAlign('left')">
-            <label for="align-left">左</label>
-            <input id="align-middle" type="radio" name="text-align" value="middle" checked onclick="barTextAlign('middle')">
-            <label for="align-middle">中</label>
-            <input id="align-right" type="radio" name="text-align" value="right" onclick="barTextAlign('right')">
-            <label for="align-right">右</label>
-          </div>
-          <div class="small">
-            <label >文本位置</label>
-            <input id="position-top" type="radio" name="text-position" value="top" onclick="barTextPosition('top')">
-            <label for="position-top">顶部</label>
-            <input id="position-bottom" type="radio" name="text-position" value="bottom" checked onclick="barTextPosition('bottom')">
-            <label for="position-bottom">底部</label>
-          </div>
-          <div class="small">
-            <label for="bar-font-size">字体大小 </label>
-            <input id="bar-font-size" class="option-range" type="range" name="bar-font-size" value="20" min="8" max="36" step="1" oninput="barFontSize()">
-            <div id="bar-font-size-value" class="option-value">20</div>
-          </div>
-          <div class="small">
-            <label for="bar-text-margin">文本留白 </label>
-            <input id="bar-text-margin" class="option-range" type="range" name="bar-text-margin" value="2" min="-15" max="40" step="1" oninput="barTextMargin()">
-            <div id="bar-text-margin-value" class="option-value">2</div>
-          </div>
-          <div class="btn-group">
-            <input class="btn " type="button" value="生成" onclick="barGen()">
-            <input class="btn " type="button" value="保存" onclick="Download('bar-canvas')">
-            <input class="btn " type="button" value="清空" onclick="barCanvasClear()">
-          </div>
-        </div>
       </div>
-      <!-- 引入 qrcode 库-->
-      <script src="qrcode/build/qrcode.min.js"></script>
-      <script src="scripts/index.js"></script>
-      <!-- div class="history-list"-->
-    </main>
-    <footer>
-
-    </footer>
+    </div>
+    <!-- 引入 qrcode 库-->
+    <script src="qrcode/build/qrcode.min.js"></script>
+    <script src="scripts/index.js"></script>
+    <!-- div class="history-list"-->
   </body>
 </html>
