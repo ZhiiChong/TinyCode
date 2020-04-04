@@ -323,6 +323,7 @@ function qrVersionAuto() {
         qrOptions.version = "auto";
     }
     else {
+        document.getElementById("qr-version-value").innerHTML = document.getElementById("qr-version").value;
         qrOptions.version = parseInt(document.getElementById("qr-version").value);
     }
     changeButton(versionAuto.id);
@@ -349,6 +350,7 @@ function qrMaskAuto() {
         qrOptions.maskPattern = "auto";
     }
     else {
+        document.getElementById("qr-mask-value").innerHTML = document.getElementById("qr-mask").value;
         qrOptions.maskPattern = parseInt(document.getElementById("qr-mask").value);
     }
     changeButton(maskAuto.id);
