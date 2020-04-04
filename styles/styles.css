@@ -12,7 +12,12 @@ body {
 .title-container {
   padding: 20px 5% 0;
 }
-
+.options-group-name {
+  text-align: center;
+  background-color: #d6d6d6;
+  color: white;
+  margin: auto -15px;
+}
 /* 用户不可调整输入域大小 */
 #input {
   resize: none;
