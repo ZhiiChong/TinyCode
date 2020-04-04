@@ -1,28 +1,129 @@
-/*#qr-canvas > canvas,
-#bar-canvas {
-  display: block; /* Required to allow centering of the canvas */
-  /*margin: 0 auto;
+/* 页面样式 */
+body {
+  background-color: #e6e6e6;
 }
-#qr-canvas > img {
-  margin: 0 auto;
-}*/
+#main {
+  background-color: white;
+}
+#qr-options,
+#bar-options {
+  background-color: rgb(245, 245, 245);
+}
+.title-container {
+  padding: 20px 5% 0;
+}
 
-@media screen and (min-width: 768px) {
-  .navbar-brand {
+/* 用户不可调整输入域大小 */
+#input {
+  resize: none;
+}
+
+/* 画布容器最大值，画布水平垂直居中 */
+.code-container {
+  height: 330px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  overflow: auto;
+}
+
+/* 报错文本 */
+#qr-error,
+#bar-error {
+  text-align: center;
+  font-size: xx-large;
+  color: rgb(133, 1, 1);
+}
+
+/* 显示按钮组与参数按钮组留白，垂直居中 */
+#show-buttons,
+#renderer-buttons {
+  margin: 10px auto;
+  text-align: center;
+}
+
+/* 设置所有布局容器的上下外边界，美化视觉效果 */
+.row,
+#io-area {
+  margin: 15px 0;
+}
+
+/* 设置输入区域与参数区域排列顺序，便于布局 */
+#io-area {
+  order: 1;
+}
+#qr-options {
+  order: 2;
+}
+#bar-options {
+  order: 3;
+}
+
+/* 参数区的 标签-参数-数值 对齐 */
+.description-text {
+  text-align: center;
+}
+.center-text {
+  text-align: center;
+}
+.value-text {
+  text-align: right;
+}
+
+/* 参数区的滑动条长度设为最大值 */
+.option-range {
+  width: 100%;
+}
+
+/* 水平按钮组默认不显示，用于页面布局 */
+.input-buttons-vertical,
+.function-buttons-vertical {
+  display: none;
+}
+
+
+/* 浏览器宽度不小于 992px 时响应，对应 lg */
+@media screen and (min-width: 992px) {
+  .description-text {
+    text-align: left;
+  }
+  .value-text {
+    padding-left: 0;
+  }
+  /* 改变显示顺序，使输入输出区域居中 */
+  #io-area {
+    order: 2;
+  }
+  #qr-options {
+    order: 1;
+  }
+  /* 隐藏功能水平按钮组（参数下面的），显示功能水平按钮组 */
+  .function-buttons {
     display: none;
+  }
+  .function-buttons-vertical {
+    display: block;
+    padding-right: 16.66%;
+  }
+  #main,
+  #main-box{
+    padding: 0;
   }
 }
 
-.lb-middle {
-  vertical-align: middle;
-}
-
-.option-range {
-  width: 80px;
-}
-
-.option-value {
-  display: inline-block;
-  width: 5px;
-  vertical-align: top;
+/* 浏览器宽度不大于 768px 时响应，对应 md */
+@media screen and (max-width: 768px) {
+  /* 隐藏 IO 功能水平按钮组，显示垂直按钮组 */
+  .input-buttons,
+  .function-buttons {
+    display: none;
+  }
+  .input-buttons-vertical,
+  .function-buttons-vertical {
+    display: block;
+  }
+  /* 功能垂直按钮组对齐 */
+  .function-buttons-vertical {
+    padding-left: 6.6%
+  }
 }
