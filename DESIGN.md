@@ -37,7 +37,6 @@
 
 ``` 
 |-- TinyCode
-    |-- .DS_Store
     |-- .gitattributes
     |-- DESIGN.md
     |-- README.md
@@ -50,7 +49,7 @@
     |-- styles
         |-- styles.css
         
-// 此处省略了 qrcode 库中的文件
+// 此处省略了 qrcode 库中的文件以及其他不重要的文件
 ```
 
 ### 2.2 功能设计
