@@ -122,7 +122,7 @@
 * **canvasClear(code):** 传入画布名，通过重设画布元素高度和宽度（其一就可以达到清空效果）清空画布内容。调用 isCanvasBlank(canvas) 判断是否清空并将结果打印在控制台中。
 * **isCanvasBlank(canvas):** 传入画布对象，通过创建一个新的（空的）等大画布，并比较两者 .toDataURL() 得到的值，相等则表示清空。返回判断结果。
 * **saveFile(data, name):** 传入 dataURL 和 文件名。创建一个元素命名空间，用 data 和 name 初始化 href 和 download 属性。为这个元素绑定一个鼠标点击事件并触发。 
-* **Download(canvas): **传入画布元素 id，将画布内容转换为 dataURL。获取当前时间作为文件名 fileName。调用 saveFile(dataURL, fileName)。
+* **Download(canvas):** 传入画布元素 id，将画布内容转换为 dataURL。获取当前时间作为文件名 fileName。调用 saveFile(dataURL, fileName)。
 * **display(code):** 传入显示按钮名字，调用 changeButton(button), changeDisplay(container) 改变显示按钮的样式以及隐藏/显示对应的画布和选项组。调用 adjustLayout() 调整页面布局。
 * **adjustLayout():** 通过显示按钮情况判断当前布局，并通过修改元素的 Bootstrap 网格类调整页面布局。
 * **changeButton(buttonName):** 传入按钮元素的 id，改变按钮的样式和取值（两种，分别代表选中和未选中）
