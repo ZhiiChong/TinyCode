@@ -66,7 +66,7 @@ var barOptions = {
 };
 
 /* ------------------------- */
-/* ---- 事件监听与功能实现 ---- */
+/* ---- 底层函数与基本功能 ---- */
 /* ------------------------- */
 /**
  * 根据输入改变输入文本
@@ -75,6 +75,20 @@ function textInput() {
     inputText = document.getElementById("input").value;
     realTimeGen();
 }
+
+/**
+ * 设置实时渲染
+ */
+function setRealTime() {
+    changeButton("real-time");
+    realTime = !realTime;
+}
+// 实时渲染
+function realTimeGen(){
+    if(realTime) {
+        bothGen();
+    }
+}
 /**
  * 同时生成二维码和条形码
  */
@@ -82,6 +96,7 @@ function bothGen() {
     qrGen();
     barGen();
 }
+
 /**
  * 生成二维码
  */
@@ -113,8 +128,10 @@ function barGen() {
     canvasClear("bar");
     JsBarcode(barCanvas, inputText, barOptions);
 }
+
 /**
  * 清空二维码或条形码(画布)
+ * @param {string} code - 码图类型名称，取值 "qr", "bar"
  */
 function canvasClear(code) {
     var canvas = document.getElementById(code+"-canvas");
@@ -137,20 +154,7 @@ function isCanvasBlank(canvas) {
     blank.height = canvas.height;
     return canvas.toDataURL() == blank.toDataURL();
 }
-/**
- * 设置实时渲染
- */
-function setRealTime() {
-    changeButton("real-time");
-    changeButton("real-time-vertical");
-    realTime = !realTime;
-}
-// 实时渲染
-function realTimeGen(){
-    if(realTime) {
-        bothGen();
-    }
-}
+
 /**
  * 下载
  * @param {string} data - 包含 data URL 的 DOM String
@@ -166,7 +170,7 @@ var saveFile = function(data, name) {
         save_link.dispatchEvent(event);
 }
 /**
- * 
+ * 将画布中的图像转换为 Data URL 字符串，并获取当前时间作为文件名
  * @param {object} canvas - 画布元素对象
  */
 function Download(canvas) {
@@ -175,38 +179,52 @@ function Download(canvas) {
     var fileName = (new Date()).getTime()
     saveFile(dataURL, fileName);
 }
+
 /**
  *  设置显示/隐藏二维码或条形码，并调整页面布局
- * @param {object} code 
+ * @param {object} code 图码的类别，取值 "qr", "bar"
  */
 function display(code){
     changeButton("display-"+code);
-    changeButton("display-"+code+"-vertical");
     changeDisplay(code+"-container");
     changeDisplay(code+"-options");
     // 调整布局
+    adjustLayout();
+}
+/**
+ * 调整页面布局
+ */
+function adjustLayout() {
     var qr = document.getElementById("display-qr");
     var bar = document.getElementById("display-bar");
     var qrOpt = document.getElementById("qr-options");
     var barOpt = document.getElementById("bar-options");
-    if(qr.value=="true"&&bar.value=="false") {
-        qrOpt.classList.remove("col-md-6","col-lg-2");
-        qrOpt.classList.add("col-lg-4");
+    var mainBox = document.getElementById("main-box");
+    if(qr.value=="false"&&bar.value=="false"){
+        mainBox.style.justifyContent = "space-around";
     }
-    else if(qr.value=="false"&&bar.value=="true") {
-        barOpt.classList.remove("col-md-6","col-lg-2");
-        barOpt.classList.add("col-lg-4");
-    }
-    else {
-        qrOpt.classList.remove("col-lg-4");
-        qrOpt.classList.add("col-md-6","col-lg-2");
-        barOpt.classList.remove("col-lg-4");
-        barOpt.classList.add("col-md-6","col-lg-2");
+    else{
+        mainBox.style.justifyContent = "";
+        if(qr.value=="true"&&bar.value=="false") {
+            qrOpt.classList.remove("col-md-6","col-lg-2");
+            qrOpt.classList.add("col-lg-4");
+        }
+        else if(qr.value=="false"&&bar.value=="true") {
+            barOpt.classList.remove("col-md-6","col-lg-2");
+            barOpt.classList.add("col-lg-4");
+        }
+        else {
+            qrOpt.classList.remove("col-lg-4");
+            qrOpt.classList.add("col-md-6","col-lg-2");
+            barOpt.classList.remove("col-lg-4");
+            barOpt.classList.add("col-md-6","col-lg-2");
+        }
     }
 }
+
 /**
- * 改变按钮状态（样式和值）
- * @param {*} buttonName 按钮元素id
+ * 改变按钮状态（样式和值），选中/未选中
+ * @param {string} buttonName 按钮元素id
  */
 function changeButton(buttonName) {
     var button = document.getElementById(buttonName);
@@ -222,10 +240,9 @@ function changeButton(buttonName) {
     }
 }
 /**
- * 改变容器显示样式
- * @param {*} containerName 容器元素id
+ * 改变容器显示样式，显示/隐藏元素（容器）
+ * @param {string} containerName 容器元素id
  */
-// 显示/隐藏元素（容器）
 function changeDisplay(containerName) {
     var container = document.getElementById(containerName);
     if(container.style.display!="none") {
@@ -502,4 +519,3 @@ function barTextMargin() {
     textMarginValue.innerHTML = textMargin;
     realTimeGen();
 }
-

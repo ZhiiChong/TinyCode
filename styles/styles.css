@@ -9,7 +9,7 @@ body {
 #bar-options {
   background-color: rgb(245, 245, 245);
 }
-.title-container {
+#title-container {
   padding: 20px 5% 0;
 }
 .options-group-name {
@@ -53,6 +53,17 @@ body {
   margin: 15px 0;
 }
 
+/* 清除点击按钮的默认边框，美化视觉效果 */
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,.btn:active.focus,
+.btn.active.focus { 
+  outline: none;   
+  border-color: transparent;  
+  box-shadow:none;
+}
+
 /* 设置输入区域与参数区域排列顺序，便于布局 */
 #io-area {
   order: 1;
@@ -81,7 +92,6 @@ body {
 }
 
 /* 水平按钮组默认不显示，用于页面布局 */
-.input-buttons-vertical,
 .function-buttons-vertical {
   display: none;
 }
@@ -119,16 +129,19 @@ body {
 /* 浏览器宽度不大于 768px 时响应，对应 md */
 @media screen and (max-width: 768px) {
   /* 隐藏 IO 功能水平按钮组，显示垂直按钮组 */
-  .input-buttons,
   .function-buttons {
     display: none;
   }
-  .input-buttons-vertical,
   .function-buttons-vertical {
     display: block;
   }
   /* 功能垂直按钮组对齐 */
   .function-buttons-vertical {
     padding-left: 6.6%
+  }
+  /* 减少各容器间的间隙,优化显示 */
+  .row,
+  #io-area {
+    margin: 5px 0;
   }
 }
