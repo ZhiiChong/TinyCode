@@ -140,11 +140,11 @@
 
 简要的**用户流程图**：
 
-<img src="/Users/cong/Documents/Web Project/TinyCode 流程图.png" alt="TinyCode 流程图" style="zoom:75%;" />
+<img src="https://s1.ax1x.com/2020/04/05/Grc7ss.png" alt="TinyCode 流程图" style="zoom:75%;" />
 
 大概的**数据流程图**：
 
-<img src="/Users/cong/Documents/Web Project/TinyCode 数据流程图.png" alt="TinyCode 数据流程图" style="zoom:75%;" />
+<img src="https://s1.ax1x.com/2020/04/05/GrcHLn.png" alt="TinyCode 数据流程图" style="zoom:75%;" />
 
 ### 2.5 页面布局
 
