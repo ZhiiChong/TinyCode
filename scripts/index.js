@@ -4,7 +4,7 @@
 var qrCanvas = document.getElementById("qr-canvas");    // 二维码画布元素
 var barCanvas = document.getElementById("bar-canvas");  // 条形码画布元素
 var inputText = "example";  // 输入的文本
-var realTime = false;       // 实时渲染标志
+var realTime = true;       // 实时渲染标志
 
 /**
  * 二维码参数（默认值）
